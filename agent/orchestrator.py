@@ -48,7 +48,9 @@ def build_kyc_graph():
 
 async def extract_documents_node(state: KYCState) -> KYCState:
     case = state["case"]
-    result = await extract_document_data(case.case_id)
+    # image_path would come from S3 download in production
+    image_path = f"/tmp/kyc/{case.case_id}/id_document.jpg"
+    result = await extract_document_data(case.case_id, image_path)
     case.document_result = result
     return {"case": case, "messages": [f"✅ Document extraction complete. Confidence: {result.confidence:.0%}"]}
 
